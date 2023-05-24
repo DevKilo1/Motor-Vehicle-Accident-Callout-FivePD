@@ -15,11 +15,13 @@ using System.Security.Policy;
 using System.Linq;
 using System.Runtime.Remoting.Channels;
 using Hash = CitizenFX.Core.Native.Hash;
+using System.Runtime.ConstrainedExecution;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace Motor_Vehicle_Accident
 {
     [Guid("40CFB46C-2E74-441F-A9B3-4B537C39BD04")]
-    [CalloutProperties("Motorfordonsolycka: Stadsparkerade fordon", "DevKilo", "1.0")]
+    [CalloutProperties("Motor Vehicle Accident: City Parked Vehicles", "DevKilo", "1.0")]
     public class MVA : Callout
     {
         public static Ped driver1, driver2;
@@ -55,8 +57,8 @@ namespace Motor_Vehicle_Accident
         {
             calloutLocation = GetLocation();
             InitInfo(calloutLocation);
-            ShortName = "Motorfordonsolycka";
-            CalloutDescription = "En olycka har rapporterats.";
+            ShortName = "Motor Vehicle Accident";
+            CalloutDescription = "An accident has been reported.";
             ResponseCode = 2;
             StartDistance = 20f;
             
@@ -279,7 +281,7 @@ namespace Motor_Vehicle_Accident
                     Location = Game.PlayerPed.Position;
                     await BaseScript.Delay(500); // Förlåt! Den här länktexten avslutades på grund av ett internt fel.
 
-                    ShowNetworkedNotification("~b~Förlåt!~f~ Den här länktexten avslutades på grund av ett ~r~internt fel~f~.", "CHAR_CALL911", "CHAR_CALL911", "Dispatch", "Hint", 10f);
+                    ShowNetworkedNotification("~b~Sorry!~f~ This callout was ended due to an ~r~internal error~f~.", "CHAR_CALL911", "CHAR_CALL911", "Dispatch", "Hint", 10f);
                     EndCallout();
                 }
             } else if (vehicle2.Exists() && driver2.Exists())
@@ -288,7 +290,7 @@ namespace Motor_Vehicle_Accident
                 {
                     Location = Game.PlayerPed.Position;
                     await BaseScript.Delay(500);
-                    ShowNetworkedNotification("~b~Förlåt!~f~ Den här länktexten avslutades på grund av ett ~r~internt fel~f~.", "CHAR_CALL911", "CHAR_CALL911", "Dispatch", "Hint", 10f);
+                    ShowNetworkedNotification("~b~Sorry!~f~ This callout was ended due to an ~r~internal error~f~.", "CHAR_CALL911", "CHAR_CALL911", "Dispatch", "Hint", 10f);
                     EndCallout();
                 }
             }
@@ -303,8 +305,8 @@ namespace Motor_Vehicle_Accident
             {
                 if (finishedSpawning && !db)
                 {
-                    db = true; // Tryck på E för att prata med förare som slocknar
-                    ShowNetworkedNotification("Tryck på ~y~E~s~ för att prata med ~f~förare som slocknar~s~", "CHAR_CALL911", "CHAR_CALL911", "Dispatch", "Hint", 10f);
+                    db = true; // Tryck på E för att prata med förare som slocknar // Press E to talk to the blipped Drivers
+                    ShowNetworkedNotification("Press ~y~E~s~ to talk to the ~f~blipped~s~ Drivers", "CHAR_CALL911", "CHAR_CALL911", "Dispatch", "Hint", 10f);
                     driver1.Task.ClearAllImmediately();
                     driver2.Task.ClearAll();
                     await BaseScript.Delay(1000);
@@ -358,29 +360,29 @@ namespace Motor_Vehicle_Accident
                         {
                             listdriver1 = new List<string>()
                             {
-                                "~f~Polis~s~: Kan du berätta vad som händer här?",
-                                "~f~Förare 1~s~: Tack för att du kom så snart, ~f~Polis~s~!",
-                                "~f~Förare 1~s~: Den här personen körde min bil och det gjorde min dag så mycket värre än den redan är!",
-                                "~f~Polis~s~: Okej, stanna bara här. Jag ska prata med den andra parten.",
-                                "~f~Förare 1~s~: Okej."
+                                "~f~Officer~s~: Can you tell me what's going on here?",
+                                "~f~Driver 1~s~: Thanks for coming so soon, ~f~officer~s~!",
+                                "~f~Driver 1~s~: This person hit my car and it made my day so much worse than it already is!",
+                                "~f~Officer~s~: All right, just stay here. I will speak to the other party.",
+                                "~f~Driver 1~s~: Alright."
                             };
                             listdriver2 = new List<string>()
                             {
-                                "~f~Polis~s~: Berätta allt från början.",
-                                "~f~Förare 2~s~: Jag försökte parkera och jag fick precis den här bilen, jag är ledsen att jag inte menade att göra det här!",
-                                "~f~Polis~s~: Okej, det här låter som att du ~r~erkänner ansvaret~s~ för den här olyckan.",
-                                "~f~Förare 2~s~: Ja.",
-                                "~f~Polis~s~: Ge dem din ~f~försäkring~s~ information åt mig så är vi på väg.",
-                                "~f~Förare 2~s~: Herregud, jag är så förbannad!"
+                                "~f~Officer~s~: Tell me everything from the beginning.",
+                                "~f~Driver 2~s~: I tried to park and I just got this car, I'm sorry I didn't mean to do this!",
+                                "~f~Officer~s~: Right, this sounds like you are ~r~admitting responsibility~s~ for this accident.",
+                                "~f~Driver 2~s~: Yes.",
+                                "~f~Officer~s~: Give them your ~f~insurance~s~ info for me and we'll be on our way.",
+                                "~f~Driver 2~s~: Oh, my God, I'm so pissed!"
                             };
                             for (int i = 0; i < listdriver1.Count; i++)
                             {
                                 driver1.Task.ChatTo(Game.PlayerPed);
                                 //driver1.Task.PlayAnimation("gestures@m@car@low@casual@ds", "gesture_chat", 5f, -1, AnimationFlags.None);
                                 driver1.Task.PlayAnimation("missheistdockssetup1leadinoutig_1", "lsdh_ig_1_argue_wade");
-                                if (listdriver1[i].Contains("~f~Förare"))
+                                if (listdriver1[i].Contains("~f~Driver"))
                                     driver1.PlayAmbientSpeech("APOLOGY_NO_TROUBLE", SpeechModifier.Standard);
-                                if (listdriver1[i].Contains("~f~Polis"))
+                                if (listdriver1[i].Contains("~f~Officer"))
                                     Game.PlayerPed.PlayAmbientSpeech("CHAT_RESP", SpeechModifier.ForceNormalClear);
                                 ShowDialog(listdriver1[i], 5000, 5f);
                                 await BaseScript.Delay(5000);
@@ -401,19 +403,19 @@ namespace Motor_Vehicle_Accident
                         {
                             listdriver1 = new List<string>()
                             {
-                                "~f~Polis~s~: Hej, jag fick ett samtal. Berätta vad du vet.",
-                                "~f~Förare 1~s~: Visst! De träffade min bil när de försökte parkera.",
-                                "~f~Polis~s~: Okej, vänta här.",
-                                "~r~Förare 1~s~: Den ~r~idioten~s~ kommer att få vad de förtjänar!"
+                                "~f~Officer~s~: Hello, I got a call. Tell me what you know.",
+                                "~f~Driver 1~s~: Sure! They hit my car when they tried to park.",
+                                "~f~Officer~s~: Alright, wait here.",
+                                "~r~Driver 1~s~: That ~r~idiot~s~ will get what they deserve!"
                             };
                             for (int i = 0; i < listdriver1.Count; i++)
                             {
                                 driver1.Task.ChatTo(Game.PlayerPed);
                                 //driver1.Task.PlayAnimation("gestures@m@car@low@casual@ds", "gesture_chat", 5f, -1, AnimationFlags.None);
                                 driver1.Task.PlayAnimation("missheistdockssetup1leadinoutig_1", "lsdh_ig_1_argue_wade");
-                                if (listdriver1[i].Contains("~f~Förare"))
+                                if (listdriver1[i].Contains("~f~Driver"))
                                     driver1.PlayAmbientSpeech("CHAT_STATE", SpeechModifier.Standard);
-                                if (listdriver1[i].Contains("~f~Polis"))
+                                if (listdriver1[i].Contains("~f~Officer"))
                                     Game.PlayerPed.PlayAmbientSpeech("CHAT_RESP", SpeechModifier.ForceNormalClear);
                                 ShowDialog(listdriver1[i], 5000, 5f);
                                 await BaseScript.Delay(5000);
@@ -447,21 +449,21 @@ namespace Motor_Vehicle_Accident
                         {
                             listdriver2 = new List<string>()
                             {
-                                "~f~Polis~s~: Berätta allt från början.",
-                                "~f~Förare 2~s~: Jag försökte parkera och jag fick precis den här bilen, jag är ledsen att jag inte menade att göra det här!",
-                                "~f~Polis~s~: Okej, det här låter som att du ~r~erkänner ansvaret~s~ för den här olyckan.",
-                                "~f~Förare 2~s~: Ja.",
-                                "~f~Polis~s~: Ge dem din ~f~försäkring~s~ information åt mig så är vi på väg.",
-                                "~f~Förare 2~s~: Herregud, jag är så förbannad!"
+                                "~f~Officer~s~: Tell me everything from the beginning.",
+                                "~f~Driver 2~s~: I tried to park and I just got this car, I'm sorry I didn't mean to do this!",
+                                "~f~Officer~s~: Right, this sounds like you are ~r~admitting responsibility~s~ for this accident.",
+                                "~f~Driver 2~s~: Yes.",
+                                "~f~Officer~s~: Give them your ~f~insurance~s~ info for me and we'll be on our way.",
+                                "~f~Driver 2~s~: Oh, my God, I'm so pissed!"
                             };
                             for (int i = 0; i < listdriver2.Count; i++)
                             {
                                 driver2.Task.ChatTo(Game.PlayerPed);
                                 //driver2.Task.PlayAnimation("gestures@m@car@low@casual@ds", "gesture_chat", 5f, -1, AnimationFlags.None);
                                 driver2.Task.PlayAnimation("missheistdockssetup1leadinoutig_1", "lsdh_ig_1_argue_wade");
-                                if (listdriver2[i].Contains("~f~Förare"))
+                                if (listdriver2[i].Contains("~f~Driver"))
                                     driver2.PlayAmbientSpeech("CHAT_STATE", SpeechModifier.Standard);
-                                if (listdriver2[i].Contains("~f~Polis"))
+                                if (listdriver2[i].Contains("~f~Officer"))
                                     Game.PlayerPed.PlayAmbientSpeech("CHAT_RESP", SpeechModifier.ForceNormalClear);
                                 ShowDialog(listdriver2[i], 5000, 5f);
                                 await BaseScript.Delay(5000);
@@ -484,7 +486,7 @@ namespace Motor_Vehicle_Accident
                             driver1Blip.Delete();
                             driver1.Task.CruiseWithVehicle(vehicle1, 40f);
                             bool db = false;
-                            ShowNetworkedNotification("~y~Oroa dig inte~s~! Den här länktexten ~f~autoclean~s~ på 60 sekunder", "CHAR_CALL911", "CHAR_CALL911", "RLC", "Försäkran", 10f);
+                            ShowNetworkedNotification("~y~Don't worry~s~! This callout will ~f~autoclean~s~ in 60 seconds", "CHAR_CALL911", "CHAR_CALL911", "Dispatch", "Assurance", 10f);
                             while (!driver2.IsInVehicle() && !driver1.IsInVehicle())
                             {
                                 await BaseScript.Delay(500);
