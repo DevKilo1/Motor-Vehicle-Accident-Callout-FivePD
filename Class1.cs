@@ -56,7 +56,7 @@ namespace Motor_Vehicle_Accident
             calloutLocation = GetLocation();
             InitInfo(calloutLocation);
             ShortName = "Motorfordonsolycka";
-            CalloutDescription = "An accident has been reported.";
+            CalloutDescription = "En olycka har rapporterats.";
             ResponseCode = 2;
             StartDistance = 20f;
             
