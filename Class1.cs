@@ -45,7 +45,10 @@ namespace Motor_Vehicle_Accident
                 new(-53.45f,-1117.44f,26.01f),
                 new(125.63f, -1070.75f, 28.76f),
                 new(306.47f,-1099.91f,28.96f),
-                new(102.11f,-1396.82f,28.84f)
+                new(102.11f,-1396.82f,28.84f),
+                new(753.9f,-1355.08f,26.4f),
+                new(814.13f,-1028.9f,26.27f),
+                new(786.28f,-727.75f,27.78f) //
             };
         public Vector3 GetLocation()
         {
@@ -265,6 +268,77 @@ namespace Motor_Vehicle_Accident
 
                 driver1Blip = driver1.AttachBlip();
                 driver1Blip.Color = BlipColor.MichaelBlue;
+            } else if (calloutLocation == coords[8])
+            {
+                vehicle1 = await SpawnVehicle(RandomUtils.GetRandomVehicle(VehicleClass.SUVs), new(752.02f, -1355.21f, 26.38f), 187.07f);
+                vehicle2 = await SpawnVehicle(RandomUtils.GetRandomVehicle(VehicleClass.Sedans), new(754.62f, -1352.25f, 25.94f), 116.62f);
+
+                driver1 = await World.CreatePed(new(RandomUtils.GetRandomPed()), Location.ClosestPedPlacement());
+                driver2 = await World.CreatePed(new(RandomUtils.GetRandomPed()), driver1.Position.Around(10f).ClosestPedPlacement());
+                driver1.AlwaysKeepTask = true;
+                driver1.BlockPermanentEvents = true;
+                driver2.AlwaysKeepTask = true;
+                driver2.BlockPermanentEvents = true;
+
+                if (driver1.Gender == Gender.Male)
+                    driver1.Task.PlayAnimation("amb@world_human_stand_impatient@male@no_sign@idle_a", "idle_a", 5f, -1, AnimationFlags.Loop);
+                else
+                    driver1.Task.PlayAnimation("amb@world_human_stand_impatient@female@no_sign@idle_a", "idle_a", 3f, -1, AnimationFlags.Loop);
+                if (driver2.Gender == Gender.Male)
+                    driver2.Task.PlayAnimation("amb@world_human_stand_impatient@male@no_sign@idle_a", "idle_a", 5f, -1, AnimationFlags.Loop);
+                else
+                    driver2.Task.PlayAnimation("amb@world_human_stand_impatient@female@no_sign@idle_a", "idle_a", 3f, -1, AnimationFlags.Loop);
+
+                driver1Blip = driver1.AttachBlip();
+                driver1Blip.Color = BlipColor.MichaelBlue;
+            }
+            else if (calloutLocation == coords[9])
+            {
+                vehicle1 = await SpawnVehicle(RandomUtils.GetRandomVehicle(VehicleClass.SUVs), new(816.63f,-1028.38f,26.25f),8.92f);
+                vehicle2 = await SpawnVehicle(RandomUtils.GetRandomVehicle(VehicleClass.Sedans), new(814.35f,-1031.96f,25.88f),306.98f);
+
+                driver1 = await World.CreatePed(new(RandomUtils.GetRandomPed()), Location.ClosestPedPlacement());
+                driver2 = await World.CreatePed(new(RandomUtils.GetRandomPed()), driver1.Position.Around(10f).ClosestPedPlacement());
+                driver1.AlwaysKeepTask = true;
+                driver1.BlockPermanentEvents = true;
+                driver2.AlwaysKeepTask = true;
+                driver2.BlockPermanentEvents = true;
+
+                if (driver1.Gender == Gender.Male)
+                    driver1.Task.PlayAnimation("amb@world_human_stand_impatient@male@no_sign@idle_a", "idle_a", 5f, -1, AnimationFlags.Loop);
+                else
+                    driver1.Task.PlayAnimation("amb@world_human_stand_impatient@female@no_sign@idle_a", "idle_a", 3f, -1, AnimationFlags.Loop);
+                if (driver2.Gender == Gender.Male)
+                    driver2.Task.PlayAnimation("amb@world_human_stand_impatient@male@no_sign@idle_a", "idle_a", 5f, -1, AnimationFlags.Loop);
+                else
+                    driver2.Task.PlayAnimation("amb@world_human_stand_impatient@female@no_sign@idle_a", "idle_a", 3f, -1, AnimationFlags.Loop);
+
+                driver1Blip = driver1.AttachBlip();
+                driver1Blip.Color = BlipColor.MichaelBlue;
+            }
+            else if (calloutLocation == coords[10])
+            {
+                vehicle1 = await SpawnVehicle(RandomUtils.GetRandomVehicle(VehicleClass.SUVs), new(784.8f, -727.04f, 27.85f), 346.03f);
+                vehicle2 = await SpawnVehicle(RandomUtils.GetRandomVehicle(VehicleClass.Sedans), new(781.94f,-726.46f,27.55f),215.23f);
+
+                driver1 = await World.CreatePed(new(RandomUtils.GetRandomPed()), Location.ClosestPedPlacement());
+                driver2 = await World.CreatePed(new(RandomUtils.GetRandomPed()), driver1.Position.Around(10f).ClosestPedPlacement());
+                driver1.AlwaysKeepTask = true;
+                driver1.BlockPermanentEvents = true;
+                driver2.AlwaysKeepTask = true;
+                driver2.BlockPermanentEvents = true;
+
+                if (driver1.Gender == Gender.Male)
+                    driver1.Task.PlayAnimation("amb@world_human_stand_impatient@male@no_sign@idle_a", "idle_a", 5f, -1, AnimationFlags.Loop);
+                else
+                    driver1.Task.PlayAnimation("amb@world_human_stand_impatient@female@no_sign@idle_a", "idle_a", 3f, -1, AnimationFlags.Loop);
+                if (driver2.Gender == Gender.Male)
+                    driver2.Task.PlayAnimation("amb@world_human_stand_impatient@male@no_sign@idle_a", "idle_a", 5f, -1, AnimationFlags.Loop);
+                else
+                    driver2.Task.PlayAnimation("amb@world_human_stand_impatient@female@no_sign@idle_a", "idle_a", 3f, -1, AnimationFlags.Loop);
+
+                driver1Blip = driver1.AttachBlip();
+                driver1Blip.Color = BlipColor.MichaelBlue;
             }
             //Debug.WriteLine("check3");
             finishedSpawning = true;
@@ -318,7 +392,6 @@ namespace Motor_Vehicle_Accident
                     await InteractPed(closest);
                 }
             };
-            
         }
         public async Task InteractPed(Ped closest)
         {
